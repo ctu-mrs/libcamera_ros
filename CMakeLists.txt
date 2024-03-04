@@ -14,6 +14,10 @@ endif()
 
 string(TOLOWER ${CMAKE_BUILD_TYPE} MESON_BUILD_TYPE)
 
+if ((MESON_BUILD_TYPE STREQUAL "relwithdebinfo"))
+  set(MESON_BUILD_TYPE "debugoptimized")
+endif()
+
 if(NOT NJOBS)
   set(NJOBS 0)
 endif()
@@ -35,3 +39,13 @@ ExternalProject_Add(libcamera_source
 
 add_library(libcamera SHARED IMPORTED)
 add_dependencies(libcamera libcamera_source)
+
+## --------------------------------------------------------------
+## |                           Install                          |
+## --------------------------------------------------------------
+
+install(TARGETS libcamera
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+  )

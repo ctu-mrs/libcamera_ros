@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
-<package format="3">
+<package format="2">
   <name>libcamera</name>
 
   <version>0.0.4</version>
 
   <description>An open source camera stack and framework for Linux, Android, and ChromeOS</description>
 
+  <maintainer email="vojtech.spurny@fel.cvut.cz">Vojtech Spurny</maintainer>
   <maintainer email="Rauch.Christian@gmx.de">Christian Rauch</maintainer>
 
   <license>LGPL-2.1</license>
