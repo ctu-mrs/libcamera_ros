@@ -15,7 +15,7 @@
 
   <author email="libcamera-devel@lists.libcamera.org">libcamera project</author>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>meson</buildtool_depend>
 
   <build_depend>pkg-config</build_depend>

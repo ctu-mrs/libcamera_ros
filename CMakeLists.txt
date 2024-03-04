@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(libcamera)
 
+find_package(catkin REQUIRED)
+catkin_package(
+  CATKIN_DEPENDS ${CATKIN_DEPENDENCIES}
+  )
+
 # set default build type
 # https://blog.kitware.com/cmake-and-the-default-build-type/
 if((NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES) OR (CMAKE_BUILD_TYPE STREQUAL "None"))
@@ -44,8 +49,4 @@ add_dependencies(libcamera libcamera_source)
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS libcamera
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-  )
+install(CODE "MESSAGE(\"Installing libcamera project\")")
