@@ -78,7 +78,7 @@ TMP_PATH=/tmp/libcamera
 mkdir -p $TMP_PATH/package/DEBIAN
 mkdir -p $TMP_PATH/package/opt/ros/noetic/share
 
-cp -r $WORKSPACE_PATH/install/include/libcamera/libcamera $TMP_PATH/package/opt/ros/noetic/include
+cp -r $WORKSPACE_PATH/install/include/libcamera $TMP_PATH/package/opt/ros/noetic/include
 cp -r $WORKSPACE_PATH/install/share/libcamera $TMP_PATH/package/opt/ros/noetic/share
 cp -r $WORKSPACE_PATH/install/libexec $TMP_PATH/package/opt/ros/noetic/libexec
 cp -r $WORKSPACE_PATH/install/lib $TMP_PATH/package/opt/ros/noetic/lib
