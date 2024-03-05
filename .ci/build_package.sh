@@ -46,8 +46,9 @@ rosdep install -y -v --rosdistro=noetic --from-paths ./
 sudo apt-get -y install ros-noetic-catkin python3-catkin-tools
 
 # libcamera dependency
-sudo apt-get -y install meson python3-yaml python3-ply python3-jinja2 openssl
+sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl
 pip3 install --user meson
+sudo ln -s /usr/local/bin/meson /usr/bin/meson
 
 ## | ---------------- prepare catkin workspace ---------------- |
 
