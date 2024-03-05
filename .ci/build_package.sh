@@ -47,7 +47,7 @@ sudo apt-get -y install ros-noetic-catkin python3-catkin-tools
 
 # libcamera dependency
 sudo apt-get -y install meson python3-yaml python3-ply python3-jinja2 openssl
-python3 -m pip install --user meson
+pi3 install --user meson
 
 ## | ---------------- prepare catkin workspace ---------------- |
 
