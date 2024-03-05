@@ -37,7 +37,6 @@ ExternalProject_Add(libcamera_source
   GIT_SHALLOW         ON
   CONFIGURE_COMMAND   meson setup build ../libcamera_source --prefix ${CMAKE_INSTALL_PREFIX} --libdir lib --buildtype ${MESON_BUILD_TYPE} --auto-features=disabled
                         -Dpipelines=all
-                        -Dcam=enabled
   BUILD_COMMAND       meson compile -C build --jobs ${NJOBS}
   INSTALL_COMMAND     meson install -C build
 )
