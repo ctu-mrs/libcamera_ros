@@ -28,16 +28,6 @@ else
   ARCH="arm64"
 fi
 
-## | ---------------- check if we are on a tag ---------------- |
-
-cd $PACKAGE_PATH
-GIT_TAG=$(git describe --exact-match --tags HEAD || echo "")
-
-if [[ "$GIT_TAG" == "" ]]; then
-  echo "$0: git tag not recognized! PX4 requires the current commit to be tagged with, e.g., v1.12.1-dev tag."
-  exit 1
-fi
-
 ## | ----------------------- Install ROS ---------------------- |
 
 $PACKAGE_PATH/.ci_scripts/package_build/add_ros_ppa.sh
