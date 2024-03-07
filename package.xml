@@ -33,7 +33,4 @@
   <!-- workaround for https://bugs.libcamera.org/show_bug.cgi?id=189 -->
   <depend>libatomic</depend>
 
-  <export>
-    <build_type>cmake</build_type>
-  </export>
 </package>
