@@ -61,7 +61,7 @@ source /opt/ros/noetic/setup.bash
 
 catkin init
 catkin config --profile release --cmake-args -DCMAKE_BUILD_TYPE=Release
-catkin config --profile relWithDebugInfo --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebugInfo
+catkin config --profile relWithDebInfo --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
 catkin profile set relWithDebugInfo
 catkin config --install
 
