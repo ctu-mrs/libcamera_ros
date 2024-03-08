@@ -61,7 +61,8 @@ source /opt/ros/noetic/setup.bash
 
 catkin init
 catkin config --profile release --cmake-args -DCMAKE_BUILD_TYPE=Release
-catkin profile set release
+catkin config --profile relWithDebugInfo --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebugInfo
+catkin profile set relWithDebugInfo
 catkin config --install
 
 ln -sf $PACKAGE_PATH $WORKSPACE_PATH/src/libcamera
