@@ -116,7 +116,7 @@ if(NOT "include" STREQUAL " ")
   endforeach()
 endif()
 
-set(libraries "camera;camera-base")
+set(libraries "camera;camera-base;pisp")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")

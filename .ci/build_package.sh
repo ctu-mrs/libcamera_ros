@@ -81,6 +81,7 @@ mkdir -p $TMP_PATH/package/opt/ros/noetic/share
 
 # cp -r $WORKSPACE_PATH/install/bin/cam $TMP_PATH/package/opt/ros/noetic/lib/libcamera/.
 cp -r $WORKSPACE_PATH/install/include/libcamera $TMP_PATH/package/opt/ros/noetic/include
+cp -r $WORKSPACE_PATH/install/include/libpisp $TMP_PATH/package/opt/ros/noetic/include
 cp -r $WORKSPACE_PATH/install/share/libcamera $TMP_PATH/package/opt/ros/noetic/share
 cp -r $WORKSPACE_PATH/install/libexec $TMP_PATH/package/opt/ros/noetic/libexec
 cp -r $WORKSPACE_PATH/install/lib $TMP_PATH/package/opt/ros/noetic/lib
