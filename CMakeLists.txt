@@ -42,7 +42,7 @@ ExternalProject_Add(libcamera_source
                         -Dgstreamer=disabled
                         -Dtest=false
                         -Dlc-compliance=disabled
-                        -Dcam=enabled
+                        -Dcam=disabled
                         -Dqcam=disabled
                         -Ddocumentation=disabled
   BUILD_COMMAND       meson compile -C build --jobs ${NJOBS}
