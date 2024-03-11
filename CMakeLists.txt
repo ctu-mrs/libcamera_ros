@@ -32,11 +32,19 @@ find_package(OpenSSL REQUIRED)
 include(ExternalProject)
 
 ExternalProject_Add(libcamera_source
-  GIT_REPOSITORY      https://git.libcamera.org/libcamera/libcamera.git
-  GIT_TAG             v0.0.4
+  GIT_REPOSITORY      https://github.com/raspberrypi/libcamera.git
+  GIT_TAG             v0.2.0+rpt20240215
   GIT_SHALLOW         ON
   CONFIGURE_COMMAND   meson setup build ../libcamera_source --prefix ${CMAKE_INSTALL_PREFIX} --libdir lib --buildtype ${MESON_BUILD_TYPE} --auto-features=disabled
-                        -Dpipelines=auto
+                        -Dpipelines=rpi/pisp
+                        -Dipas=rpi/pisp
+                        -Dv4l2=false
+                        -Dgstreamer=disabled
+                        -Dtest=false
+                        -Dlc-compliance=disabled
+                        -Dcam=enabled
+                        -Dqcam=disabled
+                        -Ddocumentation=disabled
   BUILD_COMMAND       meson compile -C build --jobs ${NJOBS}
   INSTALL_COMMAND     meson install -C build
 )
