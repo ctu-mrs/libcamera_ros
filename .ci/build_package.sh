@@ -89,6 +89,8 @@ cp -r $WORKSPACE_PATH/install/lib $TMP_PATH/package/opt/ros/noetic/lib
 rm $TMP_PATH/package/opt/ros/noetic/lib/pkgconfig/catkin_tools_prebuild.pc
 cp -r $PACKAGE_PATH/.ci/libcameraConfig.cmake $TMP_PATH/package/opt/ros/noetic/share/libcamera/cmake/libcameraConfig.cmake
 
+sed -i 's/Requires:/Requires: yaml libssl-dev libudev-dev libatomic/' $TMP_PATH/package/opt/ros/noetic/lib/pkgconfig/libcamera.pc
+
 # extract package version
 VERSION=$(cat $PACKAGE_PATH/package.xml | grep '<version>' | sed -e 's/\s*<\/*version>//g')
 echo "$0: Detected version $VERSION"
