@@ -3,10 +3,10 @@ name: generic_package_build
 on:
 
   push:
-    branches: [ catkin ]
+    branches: [ master ]
 
   pull_request:
-    branches: [ catkin ]
+    branches: [ master ]
 
   workflow_dispatch:
 

@@ -31,9 +31,19 @@ find_package(OpenSSL REQUIRED)
 
 include(ExternalProject)
 
+set(LIBCAMERA_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/libcamera_install)
+set(LIBCAMERA_INSTALL_DIR ${LIBCAMERA_INSTALL_PREFIX}/${CMAKE_INSTALL_PREFIX})
+configure_file(make_install_libcamera.sh.in ${CMAKE_BINARY_DIR}/make_install_libcamera.sh)
+
+catkin_package(
+    DEPENDS
+    CATKIN_DEPENDS
+    LIBRARIES libcamera
+)
+
 ExternalProject_Add(libcamera_source
-  GIT_REPOSITORY      https://github.com/raspberrypi/libcamera.git
-  GIT_TAG             v0.2.0+rpt20240215
+  GIT_REPOSITORY      https://github.com/ctu-mrs/libcamera.git
+  GIT_TAG             v0.3.0+rpt20240617_build_fix
   GIT_SHALLOW         ON
   CONFIGURE_COMMAND   meson setup build ../libcamera_source --prefix ${CMAKE_INSTALL_PREFIX} --libdir lib --buildtype ${MESON_BUILD_TYPE} --auto-features=disabled
                         -Dpipelines=rpi/pisp
@@ -46,14 +56,23 @@ ExternalProject_Add(libcamera_source
                         -Dqcam=disabled
                         -Ddocumentation=disabled
   BUILD_COMMAND       meson compile -C build --jobs ${NJOBS}
-  INSTALL_COMMAND     meson install -C build
+  INSTALL_COMMAND ${CMAKE_BINARY_DIR}/make_install_libcamera.sh
 )
 
-add_library(libcamera SHARED IMPORTED)
+add_library(libcamera src/wrap_lib.cc)
+
+target_link_libraries(libcamera -Wl,--whole-archive -Wl,--no-whole-archive)
+
 add_dependencies(libcamera libcamera_source)
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(CODE "MESSAGE(\"Installing libcamera project\")")
+install(TARGETS libcamera
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY ${LIBCAMERA_INSTALL_DIR}/include/libcamera/libcamera/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  )

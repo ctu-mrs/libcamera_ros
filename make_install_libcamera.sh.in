@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DESTDIR=@LIBCAMERA_INSTALL_PREFIX@ meson install -C build
+
+cp -r @LIBCAMERA_INSTALL_DIR@/* @CATKIN_DEVEL_PREFIX@

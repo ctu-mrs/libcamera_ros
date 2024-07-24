@@ -2,7 +2,7 @@
 <package format="2">
   <name>libcamera</name>
 
-  <version>0.0.4</version>
+  <version>0.3.0</version>
 
   <description>An open source camera stack and framework for Linux, Android, and ChromeOS</description>
 
