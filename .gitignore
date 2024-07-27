@@ -1,0 +1,4 @@
+debian
+.obj-x86_64-linux-gnu
+*.swp
+*.swo
