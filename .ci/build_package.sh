@@ -36,7 +36,7 @@ rosdep install -y -v --rosdistro=noetic --from-paths ./
 # libcamera dependency
 sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl libudev-dev libssl-dev
 
-pip3 install meson
+pip3 install meson ninja
 pip3 install --upgrade meson
 
 ## | --------------- install bloom dependencies --------------- |
