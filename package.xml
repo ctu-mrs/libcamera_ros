@@ -3,7 +3,7 @@
 
   <name>libcamera_ros</name>
 
-  <version>1.0.0</version>
+  <version>0.3.0</version>
 
   <description>ROS wrapper around the raspberrypi/libcamera library.</description>
 
