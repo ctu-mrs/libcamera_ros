@@ -45,7 +45,6 @@ echo "$0: Running bloom on a package in '$PKG_PATH'"
 
 cd $MY_PATH/..
 
-export DEB_BUILD_OPTIONS="parallel=`nproc`"
 bloom-generate rosdebian --os-name ubuntu --os-version focal --ros-distro noetic
 
 SHA=$(git rev-parse --short HEAD)
