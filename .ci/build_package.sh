@@ -12,25 +12,6 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 VARIANT=$1
 ARTIFACTS_FOLDER=$2
 
-sudo apt-get -y update
-
-# we already have a docker image with ros for the ARM build
-if [[ "$ARCH" != "arm64" ]]; then
-  $MY_PATH/../.ci_scripts/package_build/add_ros_ppa.sh
-fi
-
-# dependencies need for build the deb package
-sudo apt-get -y install ros-noetic-catkin python3-catkin-tools
-sudo apt-get -y install fakeroot dpkg-dev debhelper
-sudo pip3 install -U bloom future
-
-sudo apt-get -y install python-is-python3
-
-## | ------------- install libcamera dependencies ------------- |
-
-# without this, the lxml package won't be installed from the internal python dependencies
-sudo apt-get -y install libxslt1-dev
-
 rosdep install -y -v --rosdistro=noetic --from-paths ./
 
 # libcamera dependency
