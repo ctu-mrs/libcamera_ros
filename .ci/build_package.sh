@@ -12,10 +12,16 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 VARIANT=$1
 ARTIFACTS_FOLDER=$2
 
+echo "$0: installing ros dependencies"
+
 rosdep install -y -v --rosdistro=noetic --from-paths ./
+
+echo "$0: installing additional apt dependencies"
 
 # libcamera dependency
 sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl libudev-dev libssl-dev
+
+echo "$0: installing meson and ninja"
 
 pip3 install meson ninja
 pip3 install --upgrade meson
