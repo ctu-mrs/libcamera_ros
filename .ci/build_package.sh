@@ -9,8 +9,8 @@ trap 'echo "$0: \"${last_command}\" command failed with exit code $?"' ERR
 MY_PATH=`dirname "$0"`
 MY_PATH=`( cd "$MY_PATH" && pwd )`
 
-VARIANT=$1
-ARTIFACTS_FOLDER=$2
+ARTIFACTS_FOLDER=$1
+BASE_IMAGE=$2
 
 echo "$0: installing ros dependencies"
 
@@ -37,7 +37,7 @@ bloom-generate rosdebian --os-name ubuntu --os-version focal --ros-distro noetic
 SHA=$(git rev-parse --short HEAD)
 
 epoch=2
-build_flag="$(date +%Y%m%d.%H%M%S)~on.push.build.git.$SHA"
+build_flag="$(date +%Y%m%d.%H%M%S)~on.push.build.git.$SHA.base.$BASE_IMAGE"
 
 sed -i "s/(/($epoch:/" ./debian/changelog
 sed -i "s/)/.${build_flag})/" ./debian/changelog
