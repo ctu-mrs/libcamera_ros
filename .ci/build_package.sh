@@ -14,6 +14,8 @@ BASE_IMAGE=$2
 
 echo "$0: installing ros dependencies"
 
+rosdep update --include-eol-distros
+
 rosdep install -y -v --rosdistro=noetic --from-paths ./
 
 echo "$0: installing additional apt dependencies"
