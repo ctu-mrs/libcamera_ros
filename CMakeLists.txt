@@ -1,8 +1,29 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20.0)
 project(libcamera_ros)
 
-set(CMAKE_CXX_STANDARD 17)
+# set the correct standards
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(${USE_ROS_TIMER})
+  MESSAGE(WARNING "[libcamera_ros]: Compiling with ROS Timers. This can cause high CPU load in runtime.")
+endif()
+
+# set the compile options to show code warnings
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra)
+endif()
+
+if(ENABLE_COVERAGE)
+  message(WARNING "building for coverage, the performance might be limited")
+
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs")
+
+  add_definitions("-O1")
+  add_definitions("-g")
+endif()
 
 # force the linker to link libcamera_source even when it is not needed for the wrapper lib
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-no-as-needed")
@@ -34,29 +55,17 @@ set(LIBCAMERA_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/libcamera_install)
 set(LIBCAMERA_INSTALL_DIR ${LIBCAMERA_INSTALL_PREFIX}/${CMAKE_INSTALL_PREFIX})
 configure_file(make_install_libcamera.sh.in ${CMAKE_BINARY_DIR}/make_install_libcamera.sh)
 
-set(CATKIN_DEPENDENCIES
-  cmake_modules
-  roscpp
-  )
-
-find_package(catkin REQUIRED COMPONENTS
-  ${CATKIN_DEPENDENCIES}
-  )
+set(DEPENDENCIES
+  ament_cmake
+)
 
 set(LIBRARIES
   LibCameraRos_Wrapper
-  )
+)
 
-catkin_package(
-  INCLUDE_DIRS include
-  CATKIN_DEPENDS ${CATKIN_DEPENDENCIES}
-  LIBRARIES ${LIBRARIES}
-  DEPENDS
-  )
-
-include_directories(
-  include
-  )
+foreach(DEP IN LISTS DEPENDENCIES)
+  find_package(${DEP} REQUIRED)
+endforeach()
 
 ExternalProject_Add(libcamera_source
   GIT_REPOSITORY      https://github.com/ctu-mrs/libcamera.git
@@ -74,57 +83,79 @@ ExternalProject_Add(libcamera_source
   -Ddocumentation=disabled
   BUILD_COMMAND       meson compile -C build --jobs ${NJOBS}
   INSTALL_COMMAND ${CMAKE_BINARY_DIR}/make_install_libcamera.sh
-  )
+)
 
-add_library(LibCameraRos_Wrapper
+add_library(LibCameraRos_Wrapper SHARED
   src/libcamera_ros_wrapper.cpp
-  )
+)
+
+target_include_directories(LibCameraRos_Wrapper
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+target_compile_definitions(LibCameraRos_Wrapper
+  PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER}
+)
 
 add_dependencies(LibCameraRos_Wrapper
-  ${catkin_EXPORTED_TARGETS}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
   libcamera_source
-  )
+)
 
 target_link_libraries(LibCameraRos_Wrapper
   ${LIBCAMERA_INSTALL_DIR}/lib/libcamera.so
   ${LIBCAMERA_INSTALL_DIR}/lib/libcamera-base.so
   ${LIBCAMERA_INSTALL_DIR}/lib/libpisp.so
-  )
+)
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS ${LIBRARIES}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-  )
+install(TARGETS ${LIBRARIES} EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
 
 install(DIRECTORY include/libcamera_ros/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  )
+  DESTINATION include/${PROJECT_NAME}
+)
 
 install(DIRECTORY include/libcamera/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/libcamera
-  )
+  DESTINATION include/libcamera
+)
 
 install(
   DIRECTORY ${LIBCAMERA_INSTALL_DIR}/lib/
-  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}/
+  DESTINATION lib/
   FILES_MATCHING PATTERN "*.so*"
-  )
+)
 
 install(DIRECTORY ${LIBCAMERA_INSTALL_DIR}/share/libpisp
-  DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}
-  )
+  DESTINATION share
+)
 
 install(DIRECTORY ${LIBCAMERA_INSTALL_DIR}/share/libcamera
-  DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}
-  )
+  DESTINATION share
+)
 
 install(DIRECTORY ${LIBCAMERA_INSTALL_DIR}/libexec
   USE_SOURCE_PERMISSIONS
-  DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}/..
-  )
+  DESTINATION share/..
+)
+
+ament_export_libraries(
+  ${LIBRARIES}
+)
+
+ament_export_targets(
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+)
+
+ament_export_dependencies(
+  ${DEPENDENCIES}
+)
+
+ament_package()

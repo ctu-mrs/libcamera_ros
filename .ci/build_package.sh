@@ -16,7 +16,7 @@ echo "$0: installing ros dependencies"
 
 rosdep update --include-eol-distros
 
-rosdep install -y -v --rosdistro=noetic --from-paths ./
+rosdep install -y -v --rosdistro=jazzy --from-paths ./
 
 echo "$0: installing additional apt dependencies"
 
@@ -25,8 +25,7 @@ sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl libudev-
 
 echo "$0: installing meson and ninja"
 
-pip3 install meson ninja
-pip3 install --upgrade meson
+pip3 install --upgrade meson ninja
 
 ## | --------------- install bloom dependencies --------------- |
 
@@ -34,7 +33,7 @@ echo "$0: Running bloom on a package in '$PKG_PATH'"
 
 cd $MY_PATH/..
 
-bloom-generate rosdebian --os-name ubuntu --os-version focal --ros-distro noetic
+bloom-generate rosdebian --os-name ubuntu --os-version noble --ros-distro jazzy
 
 SHA=$(git rev-parse --short HEAD)
 

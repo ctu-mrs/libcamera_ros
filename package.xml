@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<package format="2">
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
 
   <name>libcamera_ros</name>
 
@@ -14,20 +15,20 @@
 
   <url>https://github.com/raspberrypi/libcamera</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <depend>git</depend>
   <depend>python3-yaml</depend>
   <depend>python3-ply</depend>
   <depend>python3-jinja2</depend>
   <depend>openssl</depend>
-  <depend>cmake_modules</depend>
-  <depend>roscpp</depend>
   <depend>yaml</depend>
   <depend>libssl-dev</depend>
   <depend>libudev-dev</depend>
 
   <export>
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>

@@ -3,7 +3,7 @@
 rm -rf debian
 rm -rf .obj*
 
-bloom-generate rosdebian --os-name ubuntu  --os-version focal --ros-distro noetic
+bloom-generate rosdebian --os-name ubuntu --os-version noble --ros-distro jazzy
 
 epoch=1
 build_flag="$(date +%Y%m%d.%H%M%S)~on.push.build"
