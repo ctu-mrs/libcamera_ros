@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(USE_ROS_TIMER 0)
+
 if(${USE_ROS_TIMER})
   MESSAGE(WARNING "[libcamera_ros]: Compiling with ROS Timers. This can cause high CPU load in runtime.")
 endif()
