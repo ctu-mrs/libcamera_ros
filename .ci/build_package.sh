@@ -21,11 +21,7 @@ rosdep install -y -v --rosdistro=jazzy --from-paths ./
 echo "$0: installing additional apt dependencies"
 
 # libcamera dependency
-sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl libudev-dev libssl-dev
-
-echo "$0: installing meson and ninja"
-
-pip3 install --upgrade meson ninja
+sudo apt-get -y install python3-yaml python3-ply python3-jinja2 openssl libudev-dev libssl-dev meson
 
 ## | --------------- install bloom dependencies --------------- |
 
