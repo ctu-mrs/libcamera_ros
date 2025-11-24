@@ -3,10 +3,10 @@ name: generic_package_build
 on:
 
   push:
-    branches: [ ros2_devel ]
-
-  pull_request:
     branches: [ ros2 ]
+
+    paths-ignore:
+      - '**/README.md'
 
   workflow_dispatch:
 
