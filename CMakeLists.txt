@@ -6,12 +6,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(USE_ROS_TIMER 0)
-
-if(${USE_ROS_TIMER})
-  MESSAGE(WARNING "[libcamera_ros]: Compiling with ROS Timers. This can cause high CPU load in runtime.")
-endif()
-
 # set the compile options to show code warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra)
@@ -26,9 +20,6 @@ if(ENABLE_COVERAGE)
   add_definitions("-O1")
   add_definitions("-g")
 endif()
-
-# force the linker to link libcamera_source even when it is not needed for the wrapper lib
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-no-as-needed")
 
 # set default build type
 # https://blog.kitware.com/cmake-and-the-default-build-type/
@@ -57,17 +48,7 @@ set(LIBCAMERA_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/libcamera_install)
 set(LIBCAMERA_INSTALL_DIR ${LIBCAMERA_INSTALL_PREFIX}/${CMAKE_INSTALL_PREFIX})
 configure_file(make_install_libcamera.sh.in ${CMAKE_BINARY_DIR}/make_install_libcamera.sh)
 
-set(DEPENDENCIES
-  ament_cmake
-)
-
-set(LIBRARIES
-  LibCameraRos_Wrapper
-)
-
-foreach(DEP IN LISTS DEPENDENCIES)
-  find_package(${DEP} REQUIRED)
-endforeach()
+find_package(ament_cmake REQUIRED)
 
 ExternalProject_Add(libcamera_source
   GIT_REPOSITORY      https://github.com/ctu-mrs/libcamera.git
@@ -87,46 +68,43 @@ ExternalProject_Add(libcamera_source
   INSTALL_COMMAND ${CMAKE_BINARY_DIR}/make_install_libcamera.sh
 )
 
-add_library(LibCameraRos_Wrapper SHARED
-  src/libcamera_ros_wrapper.cpp
+add_library(libcamera_ros INTERFACE)
+add_library(libcamera_ros::libcamera_ros ALIAS libcamera_ros)
+
+set_target_properties(libcamera_ros
+  PROPERTIES
+    EXPORT_NAME libcamera_ros
+    OUTPUT_NAME libcamera_ros
 )
 
-target_include_directories(LibCameraRos_Wrapper
-  PUBLIC
+target_include_directories(libcamera_ros
+  INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(LibCameraRos_Wrapper
-  PRIVATE USE_ROS_TIMER=${USE_ROS_TIMER}
-)
-
-add_dependencies(LibCameraRos_Wrapper
-  libcamera_source
-)
-
-target_link_libraries(LibCameraRos_Wrapper
-  ${LIBCAMERA_INSTALL_DIR}/lib/libcamera.so
-  ${LIBCAMERA_INSTALL_DIR}/lib/libcamera-base.so
-  ${LIBCAMERA_INSTALL_DIR}/lib/libpisp.so
+target_link_libraries(libcamera_ros
+  INTERFACE
+    $<BUILD_INTERFACE:${LIBCAMERA_INSTALL_DIR}/lib/libcamera.so>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libcamera.so>
+    $<BUILD_INTERFACE:${LIBCAMERA_INSTALL_DIR}/lib/libcamera-base.so>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libcamera-base.so>
+    $<BUILD_INTERFACE:${LIBCAMERA_INSTALL_DIR}/lib/libpisp.so>
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/lib/libpisp.so>
 )
 
 ## --------------------------------------------------------------
 ## |                           Install                          |
 ## --------------------------------------------------------------
 
-install(TARGETS ${LIBRARIES} EXPORT export_${PROJECT_NAME}
+install(TARGETS libcamera_ros EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY include/libcamera_ros/
-  DESTINATION include/${PROJECT_NAME}
-)
-
-install(DIRECTORY include/libcamera/
-  DESTINATION include/libcamera
+install(DIRECTORY ${LIBCAMERA_INSTALL_DIR}/include/libcamera/libcamera
+  DESTINATION include
 )
 
 install(
@@ -154,10 +132,6 @@ ament_export_libraries(
 
 ament_export_targets(
   export_${PROJECT_NAME} HAS_LIBRARY_TARGET
-)
-
-ament_export_dependencies(
-  ${DEPENDENCIES}
 )
 
 ament_package()
