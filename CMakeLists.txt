@@ -51,8 +51,8 @@ configure_file(make_install_libcamera.sh.in ${CMAKE_BINARY_DIR}/make_install_lib
 find_package(ament_cmake REQUIRED)
 
 ExternalProject_Add(libcamera_source
-  GIT_REPOSITORY      https://github.com/ctu-mrs/libcamera.git
-  GIT_TAG             v0.2.0+rpt20240215_build_fix
+  GIT_REPOSITORY      https://github.com/raspberrypi/libcamera.git
+  GIT_TAG             1e2272178fa317ad3e1931a608d4d54d9c649db6
   GIT_SHALLOW         ON
   CONFIGURE_COMMAND   meson setup build ../libcamera_source --prefix ${CMAKE_INSTALL_PREFIX} --libdir lib --buildtype ${MESON_BUILD_TYPE} --auto-features=disabled
   -Dpipelines=rpi/pisp
