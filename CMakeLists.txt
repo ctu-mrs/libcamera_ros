@@ -51,9 +51,19 @@ configure_file(make_install_libcamera.sh.in ${CMAKE_BINARY_DIR}/make_install_lib
 find_package(ament_cmake REQUIRED)
 
 ExternalProject_Add(libcamera_source
-  GIT_REPOSITORY      https://github.com/raspberrypi/libcamera.git
-  GIT_TAG             v0.7.0+rpt20260205
+  GIT_REPOSITORY      https://github.com/ArduCAM/libcamera.git
+  GIT_TAG             arducam
   GIT_SHALLOW         ON
+  # The ArduCAM fork requires 'arducam_pivariety' — a Raspberry Pi-only closed-source
+  # userspace library. Patch it out so the build succeeds on cross-compilation hosts.
+  PATCH_COMMAND
+    ${CMAKE_COMMAND} -E echo "Patching out arducam_pivariety dependency" &&
+    sed -i
+      "s|    'cam_helper_arducam.cpp',||g"
+      <SOURCE_DIR>/src/ipa/rpi/cam_helper/meson.build &&
+    sed -i
+      "s|    dependency('arducam_pivariety'),||g"
+      <SOURCE_DIR>/src/ipa/rpi/cam_helper/meson.build
   CONFIGURE_COMMAND   meson setup build ../libcamera_source --prefix ${CMAKE_INSTALL_PREFIX} --libdir lib --buildtype ${MESON_BUILD_TYPE} --auto-features=disabled
   -Dpipelines=rpi/pisp
   -Dipas=rpi/pisp
